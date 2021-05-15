@@ -62,8 +62,9 @@ module.exports.deleteMovie = (req, res, next) => {
       if (!movie.owner.equals(owner)) {
         next(new ForbiddenError('Вы не можете удалить чужой фильм!'));
       } else {
-        Movie.deleteOne(movie)
-          .then(() => res.send(movie));
+        movie.remove()
+          .then(() => res.send(movie))
+          .catch(next)
       }
     })
     .catch((err) => {

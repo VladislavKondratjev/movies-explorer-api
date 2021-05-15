@@ -21,7 +21,7 @@ module.exports.login = (req, res, next) => {
       }
       bcrypt.compare(password, user.password);
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-      res.status(200).send({ token });
+      res.send({ token });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -52,7 +52,7 @@ module.exports.createUser = (req, res, next) => {
         password: hash,
       })
         .then((newUser) => {
-          res.status(200).send(newUser);
+          res.send(newUser);
         })
         .catch((err) => {
           if (err.name === 'MongoError' && err.code === 11000) {
@@ -71,7 +71,7 @@ module.exports.getUserInfo = (req, res, next) => {
   return User.findById(id)
     .orFail(() => new NotFoundError('Нет пользователя по заданному id'))
     .then((user) => {
-      res.status(200).send(user);
+      res.send(user);
     })
     .catch(next);
 };
@@ -85,7 +85,7 @@ module.exports.updateUserInfo = (req, res, next) => {
   )
     .orFail(() => new NotFoundError('Нет пользователя по заданному id'))
     .then((user) => {
-      res.status(200).send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'MongoError' && err.code === 11000) {
